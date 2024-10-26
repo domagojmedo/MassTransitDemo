@@ -27,6 +27,8 @@ public class BlogConsumer : IConsumer<BlogCreated>
 
 public class BlogEfConsumer //: IConsumer<BlogCreated>
 {
+    public static int Counter = 0;
+
     private readonly ILogger<BlogConsumer> _logger;
     private readonly DemoDbContext _db;
 
@@ -36,11 +38,15 @@ public class BlogEfConsumer //: IConsumer<BlogCreated>
         _db = db;
     }
 
-    public Task Consume(ConsumeContext<BlogCreated> context)
+    public async Task Consume(ConsumeContext<BlogCreated> context)
     {
-        _logger.LogInformation($"{_db.ContextId}");
+        Interlocked.Increment(ref Counter);
 
-        return Task.CompletedTask;
+        _logger.LogInformation($"{Counter}");
+
+        await Task.Delay(5000);
+
+        Interlocked.Decrement(ref Counter);
     }
 }
 

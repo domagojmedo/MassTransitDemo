@@ -21,20 +21,15 @@ builder.Services.AddMassTransit(x =>
     x.AddConsumers(entryAssembly);
 
     x.AddSqlMessageScheduler();
-
     x.UsingPostgres((context, cfg) =>
     {
         cfg.UseSqlMessageScheduler();
-
         cfg.ConfigureEndpoints(context);
     });
 
     x.AddEntityFrameworkOutbox<DemoDbContext>(o =>
     {
-        // configure which database lock provider to use (Postgres, SqlServer, or MySql)
         o.UsePostgres();
-
-        // enable the bus outbox
         o.UseBusOutbox();
     });
 });
